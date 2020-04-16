@@ -1,7 +1,8 @@
 #include "Git.h"
 #include <chrono>
+#include <windows.h>
 
-#if 0
+#if 1
 #define LOG(f, l, c) std::cout << f << ":" << l << " " << c << std::endl;
 #define CHECK_IF(ret) ([&,this](){auto err = ret;if (err < 0) {LOG(__FILE__, __LINE__, #ret);} return err;})
 #define CHECK(ret) Promise()CHECK_IF(ret)
@@ -147,6 +148,11 @@ void Git::sync()
 		if (git_index_has_conflicts(index)) {
 			/* Handle conflicts */
 			//output_conflicts(index);
+			auto ret = ::MessageBoxW(NULL, L"upload or download",NULL, MB_ICONEXCLAMATION | MB_YESNOCANCEL);
+			if (ret == IDYES)
+			{
+
+			}
 		}
 		else 
 		{

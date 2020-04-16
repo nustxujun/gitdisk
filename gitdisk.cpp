@@ -189,7 +189,6 @@ int main()
 	});
 
 	bool watching = true;
-	auto breaker = ::CreateEventW(NULL,FALSE,TRUE,L"breaker");
 	std::thread monitorthread([&](){
 		//auto handle = FindFirstChangeNotificationW(L"temp",false, FILE_NOTIFY_CHANGE_LAST_WRITE | FILE_NOTIFY_CHANGE_CREATION | FILE_NOTIFY_CHANGE_DIR_NAME | FILE_NOTIFY_CHANGE_FILE_NAME);
 		char buffer[1024] = {0};
@@ -244,7 +243,6 @@ int main()
 	}
 
 	watching = false;
-	::SetEvent(breaker);
 	monitorthread.join();
 
 	GitDispatcher.close();
