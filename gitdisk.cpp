@@ -44,7 +44,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			SendMessage(hwnd, WM_CLOSE, 0, 0);
 		});
 		break;
-	case WM_USER://连续使用该程序时候的消息.
+	case WM_USER:
 		systray->process(lParam);
 		break;
 	case WM_DESTROY:

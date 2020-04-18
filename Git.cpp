@@ -2,7 +2,7 @@
 #include <chrono>
 #include <windows.h>
 
-#if 1
+#if 0
 #define LOG(f, l, c) std::cout << f << ":" << l << " " << c << std::endl;
 #define CHECK_IF(ret) ([&,this](){auto err = ret;if (err < 0) {LOG(__FILE__, __LINE__, #ret);} return err;})
 #define CHECK(ret) Promise()CHECK_IF(ret)
@@ -125,7 +125,6 @@ void Git::sync()
 	// merge
 	CHECK_IF(git_annotated_commit_lookup(&head_commit, mRepository, git_reference_target(remoteheadref)))
 	CHECK_IF(git_commit_lookup(&remoteheadcmt, mRepository, git_reference_target(remoteheadref)))
-
 	CHECK_IF(git_merge_analysis(&analysis,&preference,mRepository, (const git_annotated_commit**)&head_commit, 1));
 
 	if (analysis & GIT_MERGE_ANALYSIS_UP_TO_DATE) {
@@ -146,12 +145,21 @@ void Git::sync()
 		;
 
 		if (git_index_has_conflicts(index)) {
-			/* Handle conflicts */
-			//output_conflicts(index);
 			auto ret = ::MessageBoxW(NULL, L"upload or download",NULL, MB_ICONEXCLAMATION | MB_YESNOCANCEL);
 			if (ret == IDYES)
 			{
+				git_checkout_options co_options;
+				CHECK(git_checkout_init_options(&co_options, GIT_CHECKOUT_OPTIONS_VERSION))
+				CHECK_IF(git_checkout_tree(mRepository,(const git_object*)remoteheadcmt,&co_options))
+				;
+			}
+			else if (ret == IDNO)
+			{
 
+			}
+			else
+			{
+				return;
 			}
 		}
 		else 
